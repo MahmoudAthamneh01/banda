@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Phone, Mail, Lock, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
@@ -8,12 +8,13 @@ import Image from 'next/image';
 type AuthMode = 'phone' | 'wechat' | 'alipay';
 
 interface LoginPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default function LoginPage({ params }: LoginPageProps) {
+  const { locale } = use(params);
   const router = useRouter();
   const [mode, setMode] = useState<AuthMode>('phone');
   const [phone, setPhone] = useState('');
@@ -35,7 +36,7 @@ export default function LoginPage({ params }: LoginPageProps) {
       const response = await fetch('/api/auth/send-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, locale: params.locale }),
+        body: JSON.stringify({ phone, locale }),
       });
 
       const data = await response.json();
@@ -65,14 +66,14 @@ export default function LoginPage({ params }: LoginPageProps) {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, code, locale: params.locale }),
+        body: JSON.stringify({ phone, code, locale }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         // Redirect based on user role
-        const redirect = data.redirect || `/${params.locale}/square`;
+        const redirect = data.redirect || `/${locale}/square`;
         router.push(redirect);
       } else {
         setError(data.message || 'Login failed');
@@ -86,12 +87,12 @@ export default function LoginPage({ params }: LoginPageProps) {
 
   const handleWeChatLogin = () => {
     // Redirect to WeChat OAuth
-    window.location.href = `/api/auth/wechat?locale=${params.locale}`;
+    window.location.href = `/api/auth/wechat?locale=${locale}`;
   };
 
   const handleAlipayLogin = () => {
     // Redirect to Alipay OAuth
-    window.location.href = `/api/auth/alipay?locale=${params.locale}`;
+    window.location.href = `/api/auth/alipay?locale=${locale}`;
   };
 
   return (
@@ -265,7 +266,7 @@ export default function LoginPage({ params }: LoginPageProps) {
         {/* Footer */}
         <p className="text-center text-slate-500 text-sm mt-6">
           By continuing, you agree to BandaChao's{' '}
-          <a href={`/${params.locale}/legal/terms`} className="text-panda-500 hover:underline">
+          <a href={`/${locale}/legal/terms`} className="text-panda-500 hover:underline">
             Terms of Service
           </a>
         </p>

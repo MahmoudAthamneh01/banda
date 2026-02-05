@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -47,8 +47,8 @@ type AIToast = {
   type?: "info" | "warning";
 } | null;
 
-export default function FeedPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function FeedPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = use(params);
   const [activeTab, setActiveTab] = useState<"following" | "trending" | "reviews" | "videos">("following");
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState(true);

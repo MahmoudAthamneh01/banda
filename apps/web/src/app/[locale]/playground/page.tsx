@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Button, Card, CardContent, Badge, Input } from '@bandachao/ui';
 import Image from 'next/image';
+import { use } from 'react';
 
 type PlaygroundItemType = 'product' | 'video' | 'maker' | 'batch';
 
@@ -39,13 +40,13 @@ const HERO_STRIPS = [
 const TABS = ['For You', 'Trending', 'Categories', 'Flash Drops', 'Mystery Boxes'];
 
 interface PlaygroundPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export default function PlaygroundPage({ params }: PlaygroundPageProps) {
-  const { locale } = params;
+  const { locale } = use(params);
   const [activeTab, setActiveTab] = useState('For You');
   const [filterOpen, setFilterOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);

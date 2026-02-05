@@ -16,9 +16,10 @@ import {
 } from "lucide-react";
 import { PublicShell } from "@/components/layout/shells/PublicShell";
 import { AskPanda } from "@/components/ai/AskPanda";
+import { use } from "react";
 
-export default function LandingPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = use(params);
 
   const pillars = [
     {

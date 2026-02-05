@@ -20,6 +20,7 @@ import {
   Gift,
   Share2,
 } from 'lucide-react';
+import { use } from 'react';
 
 const ORDER_DETAILS = {
   orderNumber: 'BC-20240115-78453',
@@ -37,8 +38,8 @@ const TIMELINE_STEPS = [
   { id: 5, name: 'Delivered', status: 'upcoming', time: '' },
 ];
 
-export default function CheckoutSuccessPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function CheckoutSuccessPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = use(params);
   const [copied, setCopied] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });

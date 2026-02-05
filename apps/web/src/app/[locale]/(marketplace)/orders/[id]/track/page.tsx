@@ -1,11 +1,12 @@
 export default async function TrackOrderPage({
   params,
 }: {
-  params: { locale: string; id: string };
+  params: Promise<{ locale: string; id: string }>;
 }) {
+  const { id } = await params;
   return (
     <div className="container py-8 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Track Order #{params.id}</h1>
+      <h1 className="text-3xl font-bold mb-6">Track Order #{id}</h1>
       <div className="space-y-6">
         <div className="border rounded-lg p-6">
           <h3 className="font-bold mb-4">Order Status</h3>
