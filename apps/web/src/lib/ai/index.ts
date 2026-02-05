@@ -7,7 +7,7 @@
 export * from './types';
 
 // Infrastructure
-export { aiCharacterRegistry, getCharacter, getCharactersForSurface, getCharactersForEvent, canAutoExecute, requiresUserApproval, isNuclearAction } from './registry';
+export { AI_REGISTRY, getCharacter, getCharactersForSurface, getCharactersForEvent, canAutoExecute, requiresUserApproval, isNuclearAction } from './registry';
 export { AIEventBus, aiEventBus, aiEvents } from './event-bus';
 export { logAIAction, getLogsByCharacter, getLogsByTimeRange, getApprovalLogs, getFailedActions, getAuditStats } from './logger';
 export { initializeAIProvider, ai } from './provider';
