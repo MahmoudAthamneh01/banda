@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -39,12 +40,10 @@ type AIToast = {
   products?: string[];
 } | null;
 
-export default function VideoDetailPage({
-  params,
-}: {
-  params: { locale: string; id: string };
-}) {
-  const { locale, id } = params;
+export default function VideoDetailPage() {
+  const params = useParams();
+  const locale = params.locale as string;
+  const id = params.id as string;
   const [liked, setLiked] = useState(false);
   const [following, setFollowing] = useState(false);
   const [likes, setLikes] = useState(Math.floor(Math.random() * 5000 + 500));

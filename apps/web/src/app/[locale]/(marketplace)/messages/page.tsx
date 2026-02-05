@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -139,8 +140,9 @@ const QUICK_REPLIES = [
   "Is this item in stock?",
 ];
 
-export default function MessagesPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function MessagesPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [selectedConversation, setSelectedConversation] = useState<number | null>(1);
   const [message, setMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');

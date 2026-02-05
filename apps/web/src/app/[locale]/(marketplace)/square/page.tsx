@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -63,8 +64,9 @@ const LIVE_STATS = {
   ordersShipped: 12453,
 };
 
-export default function SquarePage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function SquarePage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [currentBanner, setCurrentBanner] = useState(0);
   const [showAIToast, setShowAIToast] = useState(false);
   const [aiDismissed, setAiDismissed] = useState(false);

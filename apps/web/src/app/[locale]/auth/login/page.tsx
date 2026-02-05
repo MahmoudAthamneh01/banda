@@ -1,20 +1,15 @@
 'use client';
 
-import { useState, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { Phone, Mail, Lock, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 
 type AuthMode = 'phone' | 'wechat' | 'alipay';
 
-interface LoginPageProps {
-  params: Promise<{
-    locale: string;
-  }>;
-}
-
-export default function LoginPage({ params }: LoginPageProps) {
-  const { locale } = use(params);
+export default function LoginPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const router = useRouter();
   const [mode, setMode] = useState<AuthMode>('phone');
   const [phone, setPhone] = useState('');

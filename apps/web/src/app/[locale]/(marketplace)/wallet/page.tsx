@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -128,8 +129,9 @@ const getTransactionIcon = (type: string) => {
   }
 };
 
-export default function WalletPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function WalletPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [activeFilter, setActiveFilter] = useState('all');
   const [showBalance, setShowBalance] = useState(true);
   const [showDepositModal, setShowDepositModal] = useState(false);

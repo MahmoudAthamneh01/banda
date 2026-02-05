@@ -13,13 +13,14 @@ export function generateStaticParams() {
     return i18nConfig.locales.map((locale) => ({ locale }));
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
-    params: { locale }
+    params
 }: {
     children: React.ReactNode;
-    params: { locale: string };
+    params: Promise<{ locale: string }>;
 }) {
+    const { locale } = await params;
     const langDir = dir(locale);
 
     return (

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -100,8 +101,10 @@ const TIMELINE = [
   },
 ];
 
-export default function OrderDetailPage({ params }: { params: { locale: string; id: string } }) {
-  const locale = params.locale;
+export default function OrderDetailPage() {
+  const params = useParams();
+  const locale = params.locale as string;
+  const id = params.id as string;
   const [copied, setCopied] = useState(false);
   const [showReview, setShowReview] = useState(false);
 

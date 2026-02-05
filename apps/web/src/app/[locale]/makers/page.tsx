@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -33,8 +34,9 @@ type AIToast = {
   agent: string;
 } | null;
 
-export default function MakersPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function MakersPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [makers, setMakers] = useState<Maker[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

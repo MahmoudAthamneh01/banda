@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -102,8 +103,9 @@ const getStatusConfig = (status: string) => {
   }
 };
 
-export default function OrdersPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function OrdersPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showAIChattyBird, setShowAIChattyBird] = useState(false);

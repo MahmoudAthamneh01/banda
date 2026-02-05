@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -50,8 +50,9 @@ const STEPS = [
   { id: 3, name: 'Review', icon: ClipboardCheck },
 ];
 
-export default function CheckoutPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function CheckoutPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const router = useRouter();
   
   const [currentStep, setCurrentStep] = useState(1);

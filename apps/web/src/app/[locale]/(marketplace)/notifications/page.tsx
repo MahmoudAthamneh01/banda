@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -142,8 +143,9 @@ const getColorClasses = (color: string) => {
   return colors[color] || colors.panda;
 };
 
-export default function NotificationsPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function NotificationsPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [activeFilter, setActiveFilter] = useState('all');
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
   const [showAIDigest, setShowAIDigest] = useState(false);

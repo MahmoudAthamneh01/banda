@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Play,
@@ -36,8 +37,9 @@ type AIToast = {
   productId?: string;
 } | null;
 
-export default function VideosPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function VideosPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [activeFilter, setActiveFilter] = useState<"forYou" | "trending" | "makers" | "reviews">("forYou");
   const [videos, setVideos] = useState<VideoType[]>([]);
   const [loading, setLoading] = useState(true);

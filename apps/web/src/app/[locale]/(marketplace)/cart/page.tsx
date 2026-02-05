@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
@@ -65,8 +66,9 @@ const CROSS_SELL_ITEMS = [
   { id: 12, name: 'Premium Audio Cable', price: 19, image: '🔊', discount: 'Add-on Deal' },
 ];
 
-export default function CartPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function CartPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [cartItems, setCartItems] = useState(INITIAL_CART_ITEMS);
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);

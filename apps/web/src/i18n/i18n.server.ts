@@ -53,8 +53,8 @@ export async function getDictionaries(locale: Locale): Promise<Dictionaries> {
 /**
  * Detect user's preferred locale from Accept-Language header
  */
-export function detectLocale(): Locale {
-  const headersList = headers();
+export async function detectLocale(): Promise<Locale> {
+  const headersList = await headers();
   const acceptLanguage = headersList.get('accept-language') || 'en';
 
   const negotiator = new Negotiator({

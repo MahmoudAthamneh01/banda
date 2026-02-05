@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -83,8 +84,10 @@ const SIMILAR_PRODUCTS = [
   { id: 5, name: 'Wireless Charger Pad', price: 49, image: '🔌', rating: 4.5 },
 ];
 
-export default function ProductDetailPage({ params }: { params: { locale: string; id: string } }) {
-  const locale = params.locale;
+export default function ProductDetailPage() {
+  const params = useParams();
+  const locale = params.locale as string;
+  const id = params.id as string;
   const [currentImage, setCurrentImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('Black');
@@ -123,7 +126,7 @@ export default function ProductDetailPage({ params }: { params: { locale: string
     { label: 'Square', href: `/${locale}/square` },
     { label: 'Products', href: `/${locale}/products` },
     { label: MOCK_PRODUCT.category, href: `/${locale}/products?category=electronics` },
-    { label: MOCK_PRODUCT.name.slice(0, 30) + '...', href: `/${locale}/products/${params.id}` },
+    { label: MOCK_PRODUCT.name.slice(0, 30) + '...', href: `/${locale}/products/${id}` },
   ];
 
   return (

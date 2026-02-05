@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BuyerShell } from '@/components/layout/shells/BuyerShell';
 import { Button } from '@bandachao/ui';
@@ -58,8 +59,9 @@ const SORT_OPTIONS = [
   { id: 'rating', name: 'Highest Rated' },
 ];
 
-export default function ProductsPage({ params }: { params: { locale: string } }) {
-  const locale = params.locale;
+export default function ProductsPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
