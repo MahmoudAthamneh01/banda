@@ -1,0 +1,8 @@
+<!-- Chatty Bird - Customer Support -->
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="200" fill="#38BDF8"/>
+  <circle cx="200" cy="220" r="12" fill="#141F33"/>
+  <circle cx="312" cy="220" r="12" fill="#141F33"/>
+  <path d="M 220 280 L 256 295 L 292 280" stroke="#141F33" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <text x="256" y="450" font-family="Arial, sans-serif" font-size="48" fill="#141F33" text-anchor="middle">🐦</text>
+</svg>

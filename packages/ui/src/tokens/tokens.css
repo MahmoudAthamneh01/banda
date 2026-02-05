@@ -1,0 +1,109 @@
+/**
+ * Design Tokens CSS Variables
+ * 
+ * Can be imported in global CSS for CSS-only usage
+ */
+
+:root {
+  /* Colors - Neutrals */
+  --color-ink-950: #070A0F;
+  --color-ink-900: #0B1220;
+  --color-ink-850: #0F1A2D;
+  --color-ink-800: #141F33;
+  --color-ink-700: #1E2A44;
+
+  --color-slate-200: #E6EAF2;
+  --color-slate-300: #C9D2E3;
+  --color-slate-400: #9AA6BE;
+
+  /* Colors - Primary */
+  --color-panda-400: #8B5CF6;
+  --color-panda-500: #7C3AED;
+  --color-panda-600: #6D28D9;
+  --color-panda-700: #5B21B6;
+
+  /* Colors - Secondary */
+  --color-silk-400: #FCD34D;
+  --color-silk-500: #F6C453;
+  --color-silk-600: #E9B63E;
+
+  /* Colors - Tertiary */
+  --color-sky-500: #38BDF8;
+
+  /* Colors - Semantic */
+  --color-success-500: #22C55E;
+  --color-success-600: #16A34A;
+  --color-warn-500: #F59E0B;
+  --color-warn-600: #D97706;
+  --color-danger-500: #EF4444;
+  --color-danger-600: #DC2626;
+
+  /* Colors - Special */
+  --color-ruby-500: #FF3D81;
+  --color-jade-500: #10B981;
+
+  /* Spacing */
+  --spacing-0: 0px;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+  --spacing-40: 10rem;
+  --spacing-48: 12rem;
+  --spacing-56: 14rem;
+  --spacing-64: 16rem;
+
+  /* Typography - Sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --font-size-7xl: 4.5rem;
+  --font-size-8xl: 6rem;
+  --font-size-9xl: 8rem;
+
+  /* Typography - Weights */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* Border Radius */
+  --radius-none: 0px;
+  --radius-sm: 0.125rem;
+  --radius-base: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-soft-lg: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-glow-primary: 0 0 20px rgba(124, 58, 237, 0.4), 0 0 40px rgba(124, 58, 237, 0.2);
+  --shadow-glow-primary-sm: 0 0 10px rgba(124, 58, 237, 0.3);
+  --shadow-glow-gold: 0 0 20px rgba(246, 196, 83, 0.4), 0 0 40px rgba(246, 196, 83, 0.2);
+  --shadow-glow-gold-sm: 0 0 10px rgba(246, 196, 83, 0.3);
+}

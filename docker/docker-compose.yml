@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: banda-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: banda
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: banda_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - banda-network
+
+  # MongoDB Database
+  mongo:
+    image: mongo:7
+    container_name: banda-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: banda
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: banda_db
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - banda-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: banda-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass password
+    volumes:
+      - redis_data:/data
+    networks:
+      - banda-network
+
+  # API Backend
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: banda-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: "postgresql://banda:password@postgres:5432/banda_db?schema=public"
+      JWT_SECRET: "dev-secret-key-123"
+      PORT: 3001
+      NODE_ENV: production
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+    networks:
+      - banda-network
+
+  # Web Frontend
+  web:
+    build:
+      context: ../apps/web
+      dockerfile: Dockerfile
+    container_name: banda-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: "http://api:3001"
+      NODE_ENV: production
+    depends_on:
+      - api
+    networks:
+      - banda-network
+
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+
+networks:
+  banda-network:
+    driver: bridge

@@ -1,0 +1,26 @@
+{
+  "comment": "Allowed external domains for Banda Chao (China compliance)",
+  "allowedDomains": [
+    "self",
+    "aliyuncs.com",
+    "alipay.com",
+    "wechat.com",
+    "amap.com",
+    "platform.deepseek.com",
+    "api.deepseek.com"
+  ],
+  "forbiddenDomains": [
+    "googleapis.com",
+    "gstatic.com",
+    "jsdelivr.net",
+    "unpkg.com",
+    "cdnjs.cloudflare.com",
+    "cloudflare.com",
+    "fastly.net",
+    "cloudfront.net",
+    "amazonaws.com",
+    "github.io",
+    "rawgit.com",
+    "gitcdn.xyz"
+  ]
+}

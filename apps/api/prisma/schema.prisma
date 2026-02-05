@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  MAKER
+  INVESTOR
+  ADMIN
+  AMBASSADOR
+}
+
+enum WalletType {
+  FIAT
+  POINTS
+  LOCKED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Hashed
+  username  String?  @unique
+  role      Role     @default(USER)
+  
+  wallets   Wallet[]
+  actions   AuditLog[]
+  rfqs      Rfq[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Wallet {
+  id        String     @id @default(uuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  type      WalletType @default(FIAT)
+  balance   Decimal    @default(0.0)
+  currency  String     @default("CNY")
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  
+  @@unique([userId, type])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  resource  String
+  metadata  Json?
+  
+  createdAt DateTime @default(now())
+}
+
+enum RFQStatus {
+  DRAFT
+  SUBMITTED
+  REVIEWING
+  QUOTED
+  ACCEPTED
+  REJECTED
+}
+
+model Rfq {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  
+  status      RFQStatus @default(DRAFT)
+  
+  productName String
+  targetPrice Decimal?
+  quantity    Int
+  
+  sourceUrl   String?
+  sourceSku   String?
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

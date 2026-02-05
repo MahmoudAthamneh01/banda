@@ -1,0 +1,23 @@
+{
+  "title": "Marketplace",
+  "home": "Home",
+  "categories": "Categories",
+  "top_factories": "Top Factories",
+  "new_arrivals": "New Arrivals",
+  "best_sellers": "Best Sellers",
+  "deals": "Deals",
+  "add_to_cart": "Add to Cart",
+  "buy_now": "Buy Now",
+  "view_details": "View Details",
+  "out_of_stock": "Out of Stock",
+  "in_stock": "In Stock",
+  "low_stock": "Low Stock",
+  "min_order": "Min Order",
+  "bulk_pricing": "Bulk Pricing",
+  "factory": "Factory",
+  "factories": "Factories",
+  "products": "Products",
+  "reviews": "Reviews",
+  "rating": "Rating",
+  "trust_score": "Trust Score"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "الخزنة",
+  "overview": "نظرة عامة",
+  "balance": "الرصيد",
+  "investments": "الاستثمارات",
+  "funding_cycles": "دورات التمويل",
+  "transparency": "الشفافية",
+  "distribute_profit": "توزيع الأرباح",
+  "total_invested": "إجمالي الاستثمارات",
+  "active_cycles": "الدورات النشطة",
+  "roi": "عائد الاستثمار",
+  "next_payout": "الدفعة القادمة",
+  "transaction_history": "سجل المعاملات"
+}

@@ -1,0 +1,8 @@
+<!-- Deal Cat - Negotiation Assistant -->
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="200" fill="#F6C453"/>
+  <circle cx="200" cy="220" r="15" fill="#141F33"/>
+  <circle cx="312" cy="220" r="15" fill="#141F33"/>
+  <path d="M 200 280 Q 256 320 312 280" stroke="#141F33" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <text x="256" y="450" font-family="Arial, sans-serif" font-size="48" fill="#141F33" text-anchor="middle">🐱</text>
+</svg>

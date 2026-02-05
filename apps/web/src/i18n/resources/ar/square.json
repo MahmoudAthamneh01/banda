@@ -1,0 +1,23 @@
+{
+  "title": "السوق",
+  "home": "الرئيسية",
+  "categories": "الفئات",
+  "top_factories": "أفضل المصانع",
+  "new_arrivals": "وصل حديثاً",
+  "best_sellers": "الأكثر مبيعاً",
+  "deals": "العروض",
+  "add_to_cart": "إضافة للسلة",
+  "buy_now": "اشترِ الآن",
+  "view_details": "عرض التفاصيل",
+  "out_of_stock": "نفذت الكمية",
+  "in_stock": "متوفر",
+  "low_stock": "كمية محدودة",
+  "min_order": "الحد الأدنى للطلب",
+  "bulk_pricing": "أسعار الجملة",
+  "factory": "المصنع",
+  "factories": "المصانع",
+  "products": "المنتجات",
+  "reviews": "التقييمات",
+  "rating": "التقييم",
+  "trust_score": "درجة الثقة"
+}

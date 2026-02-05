@@ -1,0 +1,23 @@
+{
+  "title": "市场",
+  "home": "首页",
+  "categories": "分类",
+  "top_factories": "热门工厂",
+  "new_arrivals": "新品上架",
+  "best_sellers": "畅销商品",
+  "deals": "优惠活动",
+  "add_to_cart": "加入购物车",
+  "buy_now": "立即购买",
+  "view_details": "查看详情",
+  "out_of_stock": "缺货",
+  "in_stock": "有货",
+  "low_stock": "库存不足",
+  "min_order": "最小起订量",
+  "bulk_pricing": "批发价格",
+  "factory": "工厂",
+  "factories": "工厂",
+  "products": "产品",
+  "reviews": "评价",
+  "rating": "评分",
+  "trust_score": "信任分数"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "王座",
+  "users": "用户",
+  "factories": "工厂",
+  "reports": "报告",
+  "compliance": "合规",
+  "audit_log": "审计日志",
+  "system_health": "系统健康",
+  "total_users": "总用户数",
+  "total_factories": "总工厂数",
+  "platform_revenue": "平台收入",
+  "pending_disputes": "待处理纠纷",
+  "ban_user": "封禁用户",
+  "verify_factory": "验证工厂",
+  "resolve_dispute": "解决纠纷"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Cockpit",
+  "dashboard": "Dashboard",
+  "inventory": "Inventory",
+  "listings": "Listings",
+  "orders": "Orders",
+  "analytics": "Analytics",
+  "create_listing": "Create Listing",
+  "import_products": "Import Products",
+  "pending_orders": "Pending Orders",
+  "active_listings": "Active Listings",
+  "total_sales": "Total Sales",
+  "monthly_revenue": "Monthly Revenue",
+  "product_performance": "Product Performance",
+  "stock_alerts": "Stock Alerts"
+}

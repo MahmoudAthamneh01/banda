@@ -1,0 +1,14 @@
+{
+  "title": "金库",
+  "overview": "概览",
+  "balance": "余额",
+  "investments": "投资",
+  "funding_cycles": "融资周期",
+  "transparency": "透明度",
+  "distribute_profit": "分配利润",
+  "total_invested": "总投资额",
+  "active_cycles": "活跃周期",
+  "roi": "投资回报率",
+  "next_payout": "下次支付",
+  "transaction_history": "交易记录"
+}

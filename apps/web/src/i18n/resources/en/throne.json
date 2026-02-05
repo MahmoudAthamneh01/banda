@@ -1,0 +1,16 @@
+{
+  "title": "Throne",
+  "users": "Users",
+  "factories": "Factories",
+  "reports": "Reports",
+  "compliance": "Compliance",
+  "audit_log": "Audit Log",
+  "system_health": "System Health",
+  "total_users": "Total Users",
+  "total_factories": "Total Factories",
+  "platform_revenue": "Platform Revenue",
+  "pending_disputes": "Pending Disputes",
+  "ban_user": "Ban User",
+  "verify_factory": "Verify Factory",
+  "resolve_dispute": "Resolve Dispute"
+}

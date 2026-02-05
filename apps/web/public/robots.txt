@@ -1,0 +1,17 @@
+# BandaChao - Robots.txt
+User-agent: *
+Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /zh/
+
+# Block admin areas
+Disallow: /*/throne/
+Disallow: /*/cockpit/
+Disallow: /*/vault/
+
+# Block auth pages
+Disallow: /*/auth/
+
+# Sitemaps
+Sitemap: https://bandachao.com/sitemap.xml

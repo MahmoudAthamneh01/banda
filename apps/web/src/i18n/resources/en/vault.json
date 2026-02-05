@@ -1,0 +1,14 @@
+{
+  "title": "Vault",
+  "overview": "Overview",
+  "balance": "Balance",
+  "investments": "Investments",
+  "funding_cycles": "Funding Cycles",
+  "transparency": "Transparency",
+  "distribute_profit": "Distribute Profit",
+  "total_invested": "Total Invested",
+  "active_cycles": "Active Cycles",
+  "roi": "ROI",
+  "next_payout": "Next Payout",
+  "transaction_history": "Transaction History"
+}

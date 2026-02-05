@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   BandaChao Design System - Color Tokens
+   روح سينمائية + تباين ممتاز + واجهات حية
+   ============================================ */
+
+:root {
+  /* Background & Surfaces */
+  --bg: #0B1220; /* Ink-900 */
+  --bg-elev-1: #0F1A2D; /* Ink-850 */
+  --bg-elev-2: #141F33; /* Ink-800 */
+  --surface: rgba(255, 255, 255, 0.04); /* Glass surface */
+  --surface-strong: rgba(255, 255, 255, 0.07);
+
+  /* Borders & Dividers */
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Text Hierarchy */
+  --text: #E6EAF2; /* Slate-200 - نص أساسي */
+  --text-muted: #C9D2E3; /* Slate-300 - نص ثانوي */
+  --text-dim: #9AA6BE; /* Slate-400 - نص خافت */
+
+  /* Actions */
+  --primary: #7C3AED; /* Panda-500 */
+  --primary-hover: #6D28D9; /* Panda-600 */
+  --secondary: #F6C453; /* Silk-500 */
+  --link: #38BDF8; /* Sky-500 */
+
+  /* Shadows & Glow */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --glow-primary: 0 0 20px rgba(124, 58, 237, 0.4);
+  --glow-gold: 0 0 20px rgba(246, 196, 83, 0.4);
+}
+
+@layer base {
+  /* قواعد التباين الثابتة */
+  body {
+    @apply bg-ink-900 text-slate-200;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Hierarchy واضح */
+  h1, h2, h3 {
+    @apply text-slate-200 font-bold;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  p {
+    @apply text-slate-300;
+  }
+
+  /* Links */
+  a {
+    @apply text-sky-500 hover:text-sky-400 transition-colors;
+  }
+}
+
+@layer components {
+  /* Glass Card Component */
+  .glass-card {
+    @apply bg-surface backdrop-blur-sm border border-border rounded-xl;
+  }
+
+  .glass-card-strong {
+    @apply bg-surface-strong backdrop-blur-md border border-border-strong rounded-xl;
+  }
+
+  /* Primary CTA */
+  .btn-primary {
+    @apply bg-panda-500 hover:bg-panda-600 text-white font-semibold px-6 py-3 rounded-lg;
+    @apply transition-all duration-200;
+    @apply hover:shadow-glow-primary-sm;
+  }
+
+  .btn-primary:focus {
+    @apply ring-2 ring-panda-400 ring-offset-2 ring-offset-ink-900;
+  }
+
+  /* Secondary Button */
+  .btn-secondary {
+    @apply bg-silk-500 hover:bg-silk-600 text-ink-900 font-semibold px-6 py-3 rounded-lg;
+    @apply transition-all duration-200;
+  }
+
+  /* Ghost Button */
+  .btn-ghost {
+    @apply bg-transparent hover:bg-surface border border-border hover:border-border-strong;
+    @apply text-slate-200 font-semibold px-6 py-3 rounded-lg;
+    @apply transition-all duration-200;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .badge-gold {
+    @apply badge bg-silk-500/20 text-silk-500 border border-silk-500/30;
+  }
+
+  .badge-vip {
+    @apply badge bg-gradient-to-r from-silk-500 to-panda-500 text-white;
+    @apply shadow-glow-gold-sm;
+  }
+
+  /* Loading Skeleton */
+  .skeleton {
+    @apply bg-surface animate-shimmer rounded;
+  }
+
+  /* Empty State */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-16 text-center;
+  }
+
+  .empty-state-icon {
+    @apply w-16 h-16 text-slate-400 mb-4;
+  }
+
+  .empty-state-title {
+    @apply text-xl font-semibold text-slate-200 mb-2;
+  }
+
+  .empty-state-description {
+    @apply text-slate-300 mb-6;
+  }
+
+  /* Input */
+  .input {
+    @apply w-full bg-bg-elev-2 border border-border rounded-lg px-4 py-3;
+    @apply text-slate-200 placeholder-slate-400;
+    @apply focus:outline-none focus:ring-2 focus:ring-panda-500 focus:border-transparent;
+    @apply transition-all duration-200;
+  }
+}
+
+@layer utilities {
+  /* Ambient Background */
+  .ambient-bg {
+    background-image: 
+      radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(56, 189, 248, 0.10) 0%, transparent 50%);
+  }
+
+  /* Text Gradients */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-panda-500 to-sky-500 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-silk {
+    @apply bg-gradient-to-r from-silk-500 to-panda-500 bg-clip-text text-transparent;
+  }
+
+  /* Scrollbar Styling */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-ink-800;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-ink-700 rounded-full;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400;
+  }
+}

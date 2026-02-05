@@ -1,0 +1,16 @@
+{
+  "title": "لوحة التحكم",
+  "dashboard": "الرئيسية",
+  "inventory": "المخزون",
+  "listings": "القوائم",
+  "orders": "الطلبات",
+  "analytics": "التحليلات",
+  "create_listing": "إنشاء قائمة",
+  "import_products": "استيراد منتجات",
+  "pending_orders": "الطلبات المعلقة",
+  "active_listings": "القوائم النشطة",
+  "total_sales": "إجمالي المبيعات",
+  "monthly_revenue": "الإيرادات الشهرية",
+  "product_performance": "أداء المنتجات",
+  "stock_alerts": "تنبيهات المخزون"
+}

@@ -1,0 +1,16 @@
+{
+  "title": "驾驶舱",
+  "dashboard": "仪表盘",
+  "inventory": "库存",
+  "listings": "商品列表",
+  "orders": "订单",
+  "analytics": "分析",
+  "create_listing": "创建商品",
+  "import_products": "导入产品",
+  "pending_orders": "待处理订单",
+  "active_listings": "在售商品",
+  "total_sales": "总销售额",
+  "monthly_revenue": "月收入",
+  "product_performance": "产品表现",
+  "stock_alerts": "库存警报"
+}
