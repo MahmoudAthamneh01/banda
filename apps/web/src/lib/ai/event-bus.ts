@@ -21,7 +21,7 @@ interface EventSubscription {
   callback: EventCallback;
 }
 
-class AIEventBus {
+export class AIEventBus {
   private subscriptions: EventSubscription[] = [];
   private eventHistory: AIEvent[] = [];
   private maxHistory = 100;
