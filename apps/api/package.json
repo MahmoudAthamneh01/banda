@@ -14,7 +14,7 @@
         "prisma:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
         "prisma:deploy:production": "node scripts/prisma-deploy-production.js",
         "prisma:seed": "prisma db seed --schema prisma/schema.prisma",
-        "accounts:ensure": "node dist/scripts/ensure-login-accounts.js",
+        "accounts:ensure": "prisma generate --schema prisma/schema.prisma && node dist/scripts/ensure-login-accounts.js",
         "accounts:ensure:dev": "tsx src/scripts/ensure-login-accounts.ts"
     },
     "dependencies": {
