@@ -5,11 +5,12 @@
     "scripts": {
         "build": "pnpm -r build",
         "dev": "pnpm -r dev",
-        "lint": "pnpm -r lint",
-        "test": "pnpm -r test",
-        "typecheck": "pnpm -r typecheck",
+        "lint": "pnpm -r --if-present lint",
+        "test": "pnpm -r --if-present test",
+        "typecheck": "pnpm -r --if-present typecheck",
         "compliance": "node scripts/compliance-check.js",
-        "clean": "rm -rf node_modules apps/*/node_modules apps/*/.next apps/*/dist"
+        "clean": "rm -rf node_modules apps/*/node_modules apps/*/.next apps/*/dist",
+        "heroku-postbuild": "pnpm --dir apps/api prisma:generate && pnpm --dir apps/api build"
     },
     "devDependencies": {
         "@types/negotiator": "^0.6.4",

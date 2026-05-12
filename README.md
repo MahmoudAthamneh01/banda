@@ -22,33 +22,42 @@ banda-chao/
 
 ### Prerequisites
 - Node.js 20+
-- pnpm 8+
-- Docker & Docker Compose (for local dev)
+- pnpm 10.14.0
+- PostgreSQL 16+ or Docker & Docker Compose
 
 ### Installation
 
 1. **Clone and install dependencies**
    ```bash
+   corepack enable
    pnpm install
    ```
 
 2. **Start local database services**
    ```bash
-   cd docker
-   docker-compose up -d
+   docker compose -f docker/docker-compose.yml up -d postgres redis mongo
    ```
+   Docker maps PostgreSQL to `localhost:5433`. If you use a native local PostgreSQL service, create a `banda` user and `banda_db` database and point `DATABASE_URL` at that port instead.
 
-3. **Setup API environment**
+3. **Setup environment**
    ```bash
    cd apps/api
    cp .env.example .env
-   # Edit .env with your local settings
-   
-   # Run Prisma migrations
-   pnpm prisma migrate dev
+   # Edit DATABASE_URL, JWT_SECRET, and ALLOWED_ORIGINS
+
+   cd ../web
+   echo NEXT_PUBLIC_API_URL=http://localhost:3001/api > .env.local
    ```
 
-4. **Start development servers**
+4. **Run Prisma migrations**
+   ```bash
+   cd apps/api
+   pnpm prisma:generate
+   pnpm prisma:deploy
+   pnpm prisma:seed
+   ```
+
+5. **Start development servers**
    ```bash
    # From root - starts both web and api
    pnpm dev
@@ -65,7 +74,7 @@ banda-chao/
    pnpm dev
    ```
 
-5. **Access the application**
+6. **Access the application**
    - Frontend: http://localhost:3000
    - API: http://localhost:3001
    - Health check: http://localhost:3001/health
@@ -76,9 +85,10 @@ banda-chao/
 ```bash
 pnpm dev           # Run all apps in dev mode
 pnpm build         # Build all apps
-pnpm lint          # Lint all packages
+pnpm lint          # Run configured static checks
 pnpm typecheck     # Type check all packages
-pnpm test          # Run tests + compliance check
+pnpm test          # Run configured tests
+pnpm compliance    # Run compliance check
 pnpm clean         # Clean all build artifacts
 ```
 
@@ -147,13 +157,14 @@ Locale routing: `/[locale]/...` (e.g., `/zh/square`, `/ar/vault`)
 ✅ Auth, products, orders, legal pages  
 ✅ UI component library  
 ✅ Typed API client  
-✅ REST API skeleton with JWT auth  
-✅ Module scaffolds (ledger, referral, compliance, etc.)  
-✅ Prisma schema + MongoDB wrapper  
+✅ REST API with JWT auth, users, products, orders, wallets, RFQ, referrals, and local AI proxy  
+✅ Double-entry wallet ledger for demo deposits, order payments, maker payouts, platform fees, and referral rewards  
+✅ 3-tier referral rewards with signup, first-order, commission tracking, and earning caps  
+✅ Prisma schema, initial migration, and seed data  
 ✅ Docker dev environment  
 ✅ Compliance check script + CI  
 
-**Next:** Implement module business logic, integrate AI providers, build RFQ/bidding system.
+**Next:** Connect production Postgres, set production `NEXT_PUBLIC_API_URL` and `ALLOWED_ORIGINS`, then replace local demo AI/payment paths with real providers.
 
 ## 🤝 Contributing
 

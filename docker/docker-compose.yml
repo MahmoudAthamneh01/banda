@@ -49,8 +49,8 @@ services:
   # API Backend
   api:
     build:
-      context: ../apps/api
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: apps/api/Dockerfile
     container_name: banda-api
     restart: unless-stopped
     ports:
@@ -70,14 +70,14 @@ services:
   # Web Frontend
   web:
     build:
-      context: ../apps/web
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: apps/web/Dockerfile
     container_name: banda-web
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: "http://api:3001"
+      NEXT_PUBLIC_API_URL: "http://localhost:3001/api"
       NODE_ENV: production
     depends_on:
       - api

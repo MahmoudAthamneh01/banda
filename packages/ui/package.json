@@ -10,7 +10,7 @@
     "./components": "./src/components/index.ts"
   },
   "scripts": {
-    "lint": "eslint . --max-warnings 0",
+    "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {

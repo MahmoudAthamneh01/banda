@@ -28,38 +28,38 @@ Common Codes:
 ### Auth
 POST /auth/login
 POST /auth/register
-POST /auth/refresh
-GET  /auth/providers?region=CN
+GET  /auth/me
 
 ### Products & Catalog
 GET /products?filters=
 GET /products/:id
-POST /cockpit/import (maker only)
-GET /search/visual (image search)
+POST /products
+PATCH /products/:id
+POST /products/import
 
 ### Cart/Checkout/Orders
-POST /checkout/create
-POST /payments/webhook
+POST /orders
 GET  /orders
 GET  /orders/:id
+POST /orders/:id/ship
 POST /orders/:id/confirm-receipt
 
 ### Wallet/Ledger
-GET /wallets/me
-GET /ledger/transactions?limit=
-POST /withdrawals/request (admin-gated)
+GET /wallets
+GET /wallets/ledger
+POST /wallets/deposit-demo
 
 ### Referral
-POST /referrals/rules (admin)
 GET  /referrals/my-code
-POST /referrals/scan (QR -> tracking)
+GET  /referrals/stats
+GET  /referrals/history
 
 ### RFQ/Bidding
 POST /rfq
 GET  /rfq
-POST /rfq/:id/bid
+GET  /rfq/:id
+POST /rfq/:id/bids
 POST /rfq/:id/award
-POST /rfq/:id/confirm-completion
 
 ### Disputes/Justice
 POST /disputes
@@ -68,6 +68,5 @@ POST /disputes/:id/ai-review
 POST /disputes/:id/admin-verdict
 
 ### AI
-POST /ai/chat (VIP or ambassador)
-POST /ai/translate
-POST /ai/analyze-image
+POST /ai/chat
+GET  /ai/conversations

@@ -1,26 +1,46 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { Phone, Mail, Lock, ArrowLeft } from 'lucide-react';
-import Image from 'next/image';
+import { FormEvent, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { ArrowLeft, Lock, Mail } from 'lucide-react';
+import { ApiClient } from '@/lib/api/client';
 
-type AuthMode = 'phone' | 'wechat' | 'alipay';
+type AuthMode = 'email' | 'wechat' | 'alipay';
+
+type AuthResponse = {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+  };
+};
+
+function redirectForRole(locale: string, role: string) {
+  if (role === 'MAKER' || role === 'ADMIN' || role === 'OWNER') {
+    return `/${locale}/cockpit`;
+  }
+  if (role === 'INVESTOR') {
+    return `/${locale}/vault/opportunities`;
+  }
+
+  return `/${locale}/square`;
+}
 
 export default function LoginPage() {
   const params = useParams();
-  const locale = params.locale as string;
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
   const router = useRouter();
-  const [mode, setMode] = useState<AuthMode>('phone');
-  const [phone, setPhone] = useState('');
-  const [code, setCode] = useState('');
+  const [mode, setMode] = useState<AuthMode>('email');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [codeSent, setCodeSent] = useState(false);
 
-  const handleSendCode = async () => {
-    if (!phone || phone.length < 10) {
-      setError('Please enter a valid phone number');
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!email || !password) {
+      setError('Please enter email and password');
       return;
     }
 
@@ -28,72 +48,24 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/send-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, locale }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setCodeSent(true);
-      } else {
-        setError(data.message || 'Failed to send code');
-      }
+      const data = await ApiClient.post<AuthResponse>('/auth/login', { email, password });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      router.push(redirectForRole(locale, data.user.role));
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogin = async () => {
-    if (!phone || !code) {
-      setError('Please enter phone and code');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, code, locale }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Redirect based on user role
-        const redirect = data.redirect || `/${locale}/square`;
-        router.push(redirect);
-      } else {
-        setError(data.message || 'Login failed');
-      }
-    } catch (err) {
-      setError('Network error. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleWeChatLogin = () => {
-    // Redirect to WeChat OAuth
-    window.location.href = `/api/auth/wechat?locale=${locale}`;
-  };
-
-  const handleAlipayLogin = () => {
-    // Redirect to Alipay OAuth
-    window.location.href = `/api/auth/alipay?locale=${locale}`;
+  const handleExternalLogin = (provider: 'WeChat' | 'Alipay') => {
+    setError(`${provider} OAuth is not configured yet. Use email login for the local backend.`);
   };
 
   return (
     <div className="min-h-screen bg-ink-950 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Back Button */}
         <button
           onClick={() => router.back()}
           className="mb-8 flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors"
@@ -102,7 +74,6 @@ export default function LoginPage() {
           <span>Back</span>
         </button>
 
-        {/* Logo */}
         <div className="mb-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-panda-500 to-cyan-500 mb-4">
             <span className="text-3xl font-bold text-white">B</span>
@@ -111,20 +82,21 @@ export default function LoginPage() {
           <p className="text-slate-400 mt-2">Login to continue</p>
         </div>
 
-        {/* Auth Mode Selector */}
         <div className="flex gap-2 mb-6">
           <button
-            onClick={() => setMode('phone')}
+            type="button"
+            onClick={() => setMode('email')}
             className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all ${
-              mode === 'phone'
+              mode === 'email'
                 ? 'bg-panda-500 text-white'
                 : 'bg-ink-900 text-slate-400 hover:bg-ink-850'
             }`}
           >
-            <Phone size={18} className="inline mr-2" />
-            Phone
+            <Mail size={18} className="inline mr-2" />
+            Email
           </button>
           <button
+            type="button"
             onClick={() => setMode('wechat')}
             className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all ${
               mode === 'wechat'
@@ -135,6 +107,7 @@ export default function LoginPage() {
             WeChat
           </button>
           <button
+            type="button"
             onClick={() => setMode('alipay')}
             className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all ${
               mode === 'alipay'
@@ -146,38 +119,42 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {/* Auth Forms */}
         <div className="bg-ink-900 rounded-2xl p-6 border border-ink-800">
-          {mode === 'phone' && (
-            <div className="space-y-4">
+          {mode === 'email' && (
+            <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Phone Number
+                  Email Address
                 </label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+86 138 0000 0000"
-                  className="w-full px-4 py-3 bg-ink-950 border border-ink-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-panda-500"
-                />
-              </div>
-
-              {codeSent && (
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Verification Code
-                  </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                   <input
-                    type="text"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    placeholder="6-digit code"
-                    maxLength={6}
-                    className="w-full px-4 py-3 bg-ink-950 border border-ink-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-panda-500"
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full pl-11 pr-4 py-3 bg-ink-950 border border-ink-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-panda-500"
+                    required
                   />
                 </div>
-              )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="********"
+                    className="w-full pl-11 pr-4 py-3 bg-ink-950 border border-ink-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-panda-500"
+                    required
+                  />
+                </div>
+              </div>
 
               {error && (
                 <div className="text-sm text-danger-500 bg-danger-500/10 px-4 py-3 rounded-xl">
@@ -185,51 +162,27 @@ export default function LoginPage() {
                 </div>
               )}
 
-              {!codeSent ? (
-                <button
-                  onClick={handleSendCode}
-                  disabled={loading}
-                  className="w-full py-3 px-4 bg-panda-500 hover:bg-panda-600 text-white font-medium rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? 'Sending...' : 'Send Code'}
-                </button>
-              ) : (
-                <div className="space-y-2">
-                  <button
-                    onClick={handleLogin}
-                    disabled={loading}
-                    className="w-full py-3 px-4 bg-panda-500 hover:bg-panda-600 text-white font-medium rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {loading ? 'Logging in...' : 'Login'}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setCodeSent(false);
-                      setCode('');
-                      setError('');
-                    }}
-                    className="w-full py-3 px-4 bg-ink-850 hover:bg-ink-800 text-slate-300 font-medium rounded-xl transition-colors"
-                  >
-                    Resend Code
-                  </button>
-                </div>
-              )}
-            </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 px-4 bg-panda-500 hover:bg-panda-600 text-white font-medium rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Logging in...' : 'Login'}
+              </button>
+            </form>
           )}
 
           {mode === 'wechat' && (
             <div className="text-center space-y-4">
               <div className="w-48 h-48 mx-auto bg-white rounded-2xl p-4">
-                {/* QR Code Placeholder */}
                 <div className="w-full h-full bg-slate-100 rounded-xl flex items-center justify-center">
                   <p className="text-slate-400 text-sm">WeChat QR Code</p>
                 </div>
               </div>
-              <p className="text-slate-400 text-sm">
-                Scan QR code with WeChat to login
-              </p>
+              {error && <p className="text-sm text-danger-500">{error}</p>}
               <button
-                onClick={handleWeChatLogin}
+                type="button"
+                onClick={() => handleExternalLogin('WeChat')}
                 className="w-full py-3 px-4 bg-[#07C160] hover:bg-[#06A850] text-white font-medium rounded-xl transition-colors"
               >
                 Login with WeChat
@@ -240,16 +193,14 @@ export default function LoginPage() {
           {mode === 'alipay' && (
             <div className="text-center space-y-4">
               <div className="w-48 h-48 mx-auto bg-white rounded-2xl p-4">
-                {/* QR Code Placeholder */}
                 <div className="w-full h-full bg-slate-100 rounded-xl flex items-center justify-center">
                   <p className="text-slate-400 text-sm">Alipay QR Code</p>
                 </div>
               </div>
-              <p className="text-slate-400 text-sm">
-                Scan QR code with Alipay to login
-              </p>
+              {error && <p className="text-sm text-danger-500">{error}</p>}
               <button
-                onClick={handleAlipayLogin}
+                type="button"
+                onClick={() => handleExternalLogin('Alipay')}
                 className="w-full py-3 px-4 bg-[#1677FF] hover:bg-[#0958D9] text-white font-medium rounded-xl transition-colors"
               >
                 Login with Alipay
@@ -258,9 +209,8 @@ export default function LoginPage() {
           )}
         </div>
 
-        {/* Footer */}
         <p className="text-center text-slate-500 text-sm mt-6">
-          By continuing, you agree to BandaChao's{' '}
+          By continuing, you agree to BandaChao&apos;s{' '}
           <a href={`/${locale}/legal/terms`} className="text-panda-500 hover:underline">
             Terms of Service
           </a>

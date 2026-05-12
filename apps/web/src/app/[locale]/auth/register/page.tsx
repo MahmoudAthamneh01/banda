@@ -1,103 +1,127 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 import { AuthLayout } from '@/components/layout/AuthLayout';
 import { Button } from '@bandachao/ui';
-import { Mail, Phone, Loader2, ShoppingBag, Briefcase, TrendingUp, HelpCircle } from 'lucide-react';
+import { Briefcase, HelpCircle, Loader2, Mail, ShoppingBag, TrendingUp } from 'lucide-react';
+import { ApiClient } from '@/lib/api/client';
+
+type RegistrationRole = 'BUYER' | 'MAKER' | 'INVESTOR';
+
+type AuthResponse = {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+  };
+};
+
+function redirectForRole(locale: string, role: string) {
+  if (role === 'MAKER' || role === 'ADMIN' || role === 'OWNER') {
+    return `/${locale}/cockpit`;
+  }
+  if (role === 'INVESTOR') {
+    return `/${locale}/vault/opportunities`;
+  }
+
+  return `/${locale}/square`;
+}
 
 export default function RegisterPage() {
-  const [method, setMethod] = useState<'email' | 'phone'>('email');
+  const params = useParams();
+  const router = useRouter();
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
+  const [referralCode, setReferralCode] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
   const [showRoleHelp, setShowRoleHelp] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
-    identifier: '',
+    email: '',
     password: '',
+    role: 'BUYER' as RegistrationRole,
     termsAccepted: false,
   });
 
   const roles = [
     {
-      id: 'buyer',
+      id: 'BUYER' as const,
       name: 'Buyer',
       icon: ShoppingBag,
       desc: 'Browse and purchase products',
       color: 'from-sky-500 to-panda-500',
     },
     {
-      id: 'maker',
+      id: 'MAKER' as const,
       name: 'Maker',
       icon: Briefcase,
-      desc: 'Sell your products',
+      desc: 'Sell products and respond to RFQs',
       color: 'from-silk-500 to-panda-500',
     },
     {
-      id: 'investor',
+      id: 'INVESTOR' as const,
       name: 'Investor',
       icon: TrendingUp,
-      desc: 'Fund batches and earn',
+      desc: 'Fund batches and track returns',
       color: 'from-jade-500 to-sky-500',
     },
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    setReferralCode(new URLSearchParams(window.location.search).get('ref') || undefined);
+  }, []);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!formData.termsAccepted) return;
+
     setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+    setError('');
+
+    try {
+      const data = await ApiClient.post<AuthResponse>('/auth/register', {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        role: formData.role,
+        referralCode,
+      });
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      router.push(redirectForRole(locale, data.user.role));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
+    } finally {
       setLoading(false);
-      // TODO: Redirect to /auth/verify
-    }, 1500);
+    }
   };
 
   return (
     <AuthLayout>
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-        {/* Title */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-slate-200 mb-2">Create Account</h1>
           <p className="text-slate-400">Join the sovereign digital marketplace</p>
         </div>
 
-        {/* Method Tabs */}
-        <div className="flex gap-2 mb-6 bg-white/5 p-1 rounded-lg">
-          <button
-            onClick={() => setMethod('email')}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-              method === 'email'
-                ? 'bg-panda-500 text-white'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Mail className="h-4 w-4 inline mr-2" />
-            Email
-          </button>
-          <button
-            onClick={() => setMethod('phone')}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-              method === 'phone'
-                ? 'bg-panda-500 text-white'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Phone className="h-4 w-4 inline mr-2" />
-            Phone
-          </button>
+        <div className="mb-6 bg-white/5 p-1 rounded-lg">
+          <div className="flex items-center justify-center gap-2 py-2 text-sm font-medium text-white">
+            <Mail className="h-4 w-4" />
+            Email Registration
+          </div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              Full Name
-            </label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(event) => setFormData({ ...formData, name: event.target.value })}
               placeholder="John Doe"
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-panda-500"
               required
@@ -105,28 +129,24 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              {method === 'email' ? 'Email Address' : 'Phone Number'}
-            </label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
             <input
-              type={method === 'email' ? 'email' : 'tel'}
-              value={formData.identifier}
-              onChange={(e) => setFormData({ ...formData, identifier: e.target.value })}
-              placeholder={method === 'email' ? 'you@example.com' : '+86 123 4567 8900'}
+              type="email"
+              value={formData.email}
+              onChange={(event) => setFormData({ ...formData, email: event.target.value })}
+              placeholder="you@example.com"
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-panda-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
             <input
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="••••••••"
+              onChange={(event) => setFormData({ ...formData, password: event.target.value })}
+              placeholder="********"
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-panda-500"
               required
               minLength={8}
@@ -134,22 +154,61 @@ export default function RegisterPage() {
             <p className="mt-1 text-xs text-slate-500">At least 8 characters</p>
           </div>
 
-          {/* Terms */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Account Role</label>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {roles.map((role) => {
+                const Icon = role.icon;
+                const active = formData.role === role.id;
+                return (
+                  <button
+                    key={role.id}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, role: role.id })}
+                    className={`text-left p-3 border rounded-lg transition-colors ${
+                      active
+                        ? 'border-panda-500 bg-panda-500/15'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10'
+                    }`}
+                  >
+                    <div className={`h-9 w-9 rounded-lg bg-gradient-to-br ${role.color} flex items-center justify-center mb-3`}>
+                      <Icon className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="text-sm font-semibold text-slate-200">{role.name}</div>
+                    <div className="text-xs text-slate-400 mt-1">{role.desc}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {referralCode && (
+            <div className="text-xs text-panda-300 bg-panda-500/10 border border-panda-500/20 rounded-lg px-3 py-2">
+              Referral code applied: {referralCode}
+            </div>
+          )}
+
+          {error && (
+            <div className="text-sm text-danger-500 bg-danger-500/10 px-4 py-3 rounded-xl">
+              {error}
+            </div>
+          )}
+
           <label className="flex items-start gap-2 cursor-pointer">
             <input
               type="checkbox"
               checked={formData.termsAccepted}
-              onChange={(e) => setFormData({ ...formData, termsAccepted: e.target.checked })}
+              onChange={(event) => setFormData({ ...formData, termsAccepted: event.target.checked })}
               className="mt-1 h-4 w-4 rounded border-white/10 bg-white/5 text-panda-500 focus:ring-2 focus:ring-panda-500"
               required
             />
             <span className="text-sm text-slate-400">
               I agree to the{' '}
-              <Link href="/en/legal/terms" className="text-panda-400 hover:text-panda-300">
+              <Link href={`/${locale}/legal/terms`} className="text-panda-400 hover:text-panda-300">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link href="/en/legal/privacy" className="text-panda-400 hover:text-panda-300">
+              <Link href={`/${locale}/legal/privacy`} className="text-panda-400 hover:text-panda-300">
                 Privacy Policy
               </Link>
             </span>
@@ -171,16 +230,15 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        {/* Links */}
         <div className="mt-6 text-center text-sm text-slate-400">
           Already have an account?{' '}
-          <Link href="/en/auth/signin" className="text-panda-400 hover:text-panda-300 font-medium">
+          <Link href={`/${locale}/auth/login`} className="text-panda-400 hover:text-panda-300 font-medium">
             Sign in
           </Link>
         </div>
 
-        {/* AI Role Helper */}
         <button
+          type="button"
           onClick={() => setShowRoleHelp(!showRoleHelp)}
           className="mt-6 mx-auto flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm text-slate-400 hover:text-slate-200 transition-colors"
         >
@@ -190,7 +248,7 @@ export default function RegisterPage() {
 
         {showRoleHelp && (
           <div className="mt-4 space-y-3">
-            <p className="text-sm text-slate-300">🐼 Choose based on your goal:</p>
+            <p className="text-sm text-slate-300">Choose based on your immediate goal:</p>
             {roles.map((role) => {
               const Icon = role.icon;
               return (
@@ -209,7 +267,7 @@ export default function RegisterPage() {
               );
             })}
             <p className="text-xs text-slate-500 italic">
-              💡 Tip: Start as Buyer, you can upgrade to Maker/Investor later
+              You can change operational access later from account settings.
             </p>
           </div>
         )}

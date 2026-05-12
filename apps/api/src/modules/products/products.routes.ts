@@ -1,10 +1,21 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/auth.middleware';
-import { importProduct, getFeed } from './products.controller';
+import {
+    createProduct,
+    getFeed,
+    getProductById,
+    importProduct,
+    listProducts,
+    updateProduct,
+} from './products.controller';
 
 const router = Router();
 
-router.post('/import', authenticate, importProduct);
+router.get('/', listProducts);
 router.get('/feed', getFeed); // Public endpoint
+router.get('/:id', getProductById);
+router.post('/', authenticate, createProduct);
+router.patch('/:id', authenticate, updateProduct);
+router.post('/import', authenticate, importProduct);
 
 export default router;

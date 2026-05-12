@@ -1,4 +1,13 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+function getApiBase() {
+    const fallback = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001/api';
+    const apiBase = (process.env.NEXT_PUBLIC_API_URL || fallback).replace(/\/$/, '');
+
+    if (!apiBase) {
+        throw new Error('NEXT_PUBLIC_API_URL is required when running the production web app');
+    }
+
+    return apiBase;
+}
 
 interface ApiOptions extends RequestInit {
     token?: string;
@@ -25,12 +34,17 @@ export class ApiClient {
         };
 
         try {
-            const res = await fetch(`${API_BASE}${endpoint}`, config);
+            const res = await fetch(`${getApiBase()}${endpoint}`, config);
 
             if (!res.ok) {
                 // Handle 401/403 specifically if needed (e.g., redirect to login)
                 const errorData = await res.json().catch(() => ({}));
-                throw new Error(errorData.message || `API Error: ${res.status}`);
+                const message =
+                    errorData.error?.message ||
+                    errorData.message ||
+                    (typeof errorData.error === 'string' ? errorData.error : undefined) ||
+                    `API Error: ${res.status}`;
+                throw new Error(message);
             }
 
             return res.json() as Promise<T>;
@@ -48,6 +62,14 @@ export class ApiClient {
         return this.request<T>(endpoint, {
             ...options,
             method: 'POST',
+            body: JSON.stringify(body)
+        });
+    }
+
+    static patch<T>(endpoint: string, body: any, options?: ApiOptions) {
+        return this.request<T>(endpoint, {
+            ...options,
+            method: 'PATCH',
             body: JSON.stringify(body)
         });
     }

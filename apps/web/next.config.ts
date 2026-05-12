@@ -1,12 +1,27 @@
 import type { NextConfig } from "next";
 
+function getApiOrigin() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!apiUrl || apiUrl.startsWith('/')) {
+        return 'http://localhost:3001';
+    }
+
+    try {
+        return new URL(apiUrl).origin;
+    } catch {
+        return 'http://localhost:3001';
+    }
+}
+
+const apiOrigin = getApiOrigin();
+
 const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: https://oss.aliyun.com https://via.placeholder.com;
     font-src 'self';
-    connect-src 'self' http://localhost:3001;
+    connect-src 'self' ${apiOrigin};
     object-src 'none';
     base-uri 'self';
     form-action 'self';
@@ -17,6 +32,7 @@ const cspHeader = `
 
 const nextConfig: NextConfig = {
     reactStrictMode: true,
+    output: 'standalone',
     eslint: {
         ignoreDuringBuilds: true, // Temporarily ignore ESLint during builds
     },

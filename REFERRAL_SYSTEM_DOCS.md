@@ -240,7 +240,7 @@ Response:
 
 ## Configuration
 
-Adjust referral rates in `referral-enhanced.service.ts`:
+Adjust referral rates in `apps/api/src/modules/referrals/referral.service.ts`:
 
 ```typescript
 const DEFAULT_REWARD_CONFIG: ReferralRewardConfig = {
