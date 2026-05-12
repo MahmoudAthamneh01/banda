@@ -1,16 +1,16 @@
 {
-  "title": "لوحة التحكم",
-  "dashboard": "الرئيسية",
+  "title": "لوحة التشغيل",
+  "dashboard": "لوحة التحكم",
   "inventory": "المخزون",
   "listings": "القوائم",
   "orders": "الطلبات",
   "analytics": "التحليلات",
   "create_listing": "إنشاء قائمة",
-  "import_products": "استيراد منتجات",
-  "pending_orders": "الطلبات المعلقة",
-  "active_listings": "القوائم النشطة",
+  "import_products": "استيراد المنتجات",
+  "pending_orders": "طلبات معلقة",
+  "active_listings": "قوائم نشطة",
   "total_sales": "إجمالي المبيعات",
-  "monthly_revenue": "الإيرادات الشهرية",
+  "monthly_revenue": "الإيراد الشهري",
   "product_performance": "أداء المنتجات",
   "stock_alerts": "تنبيهات المخزون"
 }

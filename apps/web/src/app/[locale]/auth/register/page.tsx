@@ -7,6 +7,7 @@ import { AuthLayout } from '@/components/layout/AuthLayout';
 import { Button } from '@bandachao/ui';
 import { Briefcase, HelpCircle, Loader2, Mail, ShoppingBag, TrendingUp } from 'lucide-react';
 import { ApiClient } from '@/lib/api/client';
+import { normalizeLocale, uiCopy } from '@/i18n/ui-copy';
 
 type RegistrationRole = 'BUYER' | 'MAKER' | 'INVESTOR';
 
@@ -33,7 +34,8 @@ function redirectForRole(locale: string, role: string) {
 export default function RegisterPage() {
   const params = useParams();
   const router = useRouter();
-  const locale = typeof params.locale === 'string' ? params.locale : 'en';
+  const locale = normalizeLocale(typeof params.locale === 'string' ? params.locale : 'en');
+  const copy = uiCopy[locale];
   const [referralCode, setReferralCode] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
   const [showRoleHelp, setShowRoleHelp] = useState(false);
@@ -49,23 +51,23 @@ export default function RegisterPage() {
   const roles = [
     {
       id: 'BUYER' as const,
-      name: 'Buyer',
+      name: copy.auth.roles.BUYER.name,
       icon: ShoppingBag,
-      desc: 'Browse and purchase products',
+      desc: copy.auth.roles.BUYER.desc,
       color: 'from-sky-500 to-panda-500',
     },
     {
       id: 'MAKER' as const,
-      name: 'Maker',
+      name: copy.auth.roles.MAKER.name,
       icon: Briefcase,
-      desc: 'Sell products and respond to RFQs',
+      desc: copy.auth.roles.MAKER.desc,
       color: 'from-silk-500 to-panda-500',
     },
     {
       id: 'INVESTOR' as const,
-      name: 'Investor',
+      name: copy.auth.roles.INVESTOR.name,
       icon: TrendingUp,
-      desc: 'Fund batches and track returns',
+      desc: copy.auth.roles.INVESTOR.desc,
       color: 'from-jade-500 to-sky-500',
     },
   ];
@@ -94,7 +96,7 @@ export default function RegisterPage() {
       localStorage.setItem('user', JSON.stringify(data.user));
       router.push(redirectForRole(locale, data.user.role));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
+      setError(err instanceof Error ? err.message : copy.auth.registrationFailed);
     } finally {
       setLoading(false);
     }
@@ -104,20 +106,20 @@ export default function RegisterPage() {
     <AuthLayout>
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-200 mb-2">Create Account</h1>
-          <p className="text-slate-400">Join the sovereign digital marketplace</p>
+          <h1 className="text-3xl font-bold text-slate-200 mb-2">{copy.auth.createTitle}</h1>
+          <p className="text-slate-400">{copy.auth.createSubtitle}</p>
         </div>
 
         <div className="mb-6 bg-white/5 p-1 rounded-lg">
           <div className="flex items-center justify-center gap-2 py-2 text-sm font-medium text-white">
             <Mail className="h-4 w-4" />
-            Email Registration
+            {copy.auth.emailRegistration}
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">{copy.auth.fullName}</label>
             <input
               type="text"
               value={formData.name}
@@ -129,7 +131,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">{copy.auth.emailAddress}</label>
             <input
               type="email"
               value={formData.email}
@@ -141,7 +143,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">{copy.auth.password}</label>
             <input
               type="password"
               value={formData.password}
@@ -151,11 +153,11 @@ export default function RegisterPage() {
               required
               minLength={8}
             />
-            <p className="mt-1 text-xs text-slate-500">At least 8 characters</p>
+            <p className="mt-1 text-xs text-slate-500">{copy.auth.passwordHint}</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Account Role</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">{copy.auth.roleLabel}</label>
             <div className="grid gap-3 sm:grid-cols-3">
               {roles.map((role) => {
                 const Icon = role.icon;
@@ -165,7 +167,7 @@ export default function RegisterPage() {
                     key={role.id}
                     type="button"
                     onClick={() => setFormData({ ...formData, role: role.id })}
-                    className={`text-left p-3 border rounded-lg transition-colors ${
+                    className={`${locale === 'ar' ? 'text-right' : 'text-left'} p-3 border rounded-lg transition-colors ${
                       active
                         ? 'border-panda-500 bg-panda-500/15'
                         : 'border-white/10 bg-white/5 hover:bg-white/10'
@@ -184,7 +186,7 @@ export default function RegisterPage() {
 
           {referralCode && (
             <div className="text-xs text-panda-300 bg-panda-500/10 border border-panda-500/20 rounded-lg px-3 py-2">
-              Referral code applied: {referralCode}
+              {copy.auth.referralApplied} {referralCode}
             </div>
           )}
 
@@ -203,13 +205,13 @@ export default function RegisterPage() {
               required
             />
             <span className="text-sm text-slate-400">
-              I agree to the{' '}
+              {copy.auth.acceptTermsPrefix}{' '}
               <Link href={`/${locale}/legal/terms`} className="text-panda-400 hover:text-panda-300">
-                Terms of Service
+                {copy.auth.terms}
               </Link>{' '}
-              and{' '}
+              {copy.auth.acceptTermsAnd}{' '}
               <Link href={`/${locale}/legal/privacy`} className="text-panda-400 hover:text-panda-300">
-                Privacy Policy
+                {copy.auth.privacy}
               </Link>
             </span>
           </label>
@@ -222,18 +224,18 @@ export default function RegisterPage() {
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Creating account...
+                {copy.auth.creating}
               </>
             ) : (
-              'Create Account'
+              <>{copy.auth.createAccount}</>
             )}
           </Button>
         </form>
 
         <div className="mt-6 text-center text-sm text-slate-400">
-          Already have an account?{' '}
+          {copy.auth.alreadyHaveAccount}{' '}
           <Link href={`/${locale}/auth/login`} className="text-panda-400 hover:text-panda-300 font-medium">
-            Sign in
+            {copy.auth.signIn}
           </Link>
         </div>
 
@@ -243,12 +245,12 @@ export default function RegisterPage() {
           className="mt-6 mx-auto flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm text-slate-400 hover:text-slate-200 transition-colors"
         >
           <HelpCircle className="h-4 w-4" />
-          Which role should I choose?
+          {copy.auth.roleHelpButton}
         </button>
 
         {showRoleHelp && (
           <div className="mt-4 space-y-3">
-            <p className="text-sm text-slate-300">Choose based on your immediate goal:</p>
+            <p className="text-sm text-slate-300">{copy.auth.roleHelpIntro}</p>
             {roles.map((role) => {
               const Icon = role.icon;
               return (
@@ -267,7 +269,7 @@ export default function RegisterPage() {
               );
             })}
             <p className="text-xs text-slate-500 italic">
-              You can change operational access later from account settings.
+              {copy.auth.roleHelpNote}
             </p>
           </div>
         )}

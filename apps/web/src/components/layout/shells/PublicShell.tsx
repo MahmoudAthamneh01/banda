@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe, Menu, X, ExternalLink } from "lucide-react";
+import { localePath, normalizeLocale, supportedUiLocales, uiCopy } from "@/i18n/ui-copy";
 
 interface PublicShellProps {
   children: React.ReactNode;
@@ -13,6 +15,13 @@ interface PublicShellProps {
 export function PublicShell({ children, locale }: PublicShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const localeCode = normalizeLocale(locale);
+  const copy = uiCopy[localeCode];
+  const translatedLanguages = supportedUiLocales.map((code) => ({
+    code,
+    name: copy.languageNames[code],
+  }));
 
   const languages = [
     { code: "en", name: "English" },
@@ -35,24 +44,24 @@ export function PublicShell({ children, locale }: PublicShellProps) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
+            <nav className="hidden md:flex items-center gap-8">
               <Link
                 href={`/${locale}/about`}
                 className="text-slate-300 hover:text-white transition-colors"
               >
-                About
+                {copy.shell.about}
               </Link>
               <Link
                 href={`/${locale}/faq`}
                 className="text-slate-300 hover:text-white transition-colors"
               >
-                FAQ
+                {copy.shell.faq}
               </Link>
               <Link
                 href={`/${locale}/status`}
                 className="text-slate-300 hover:text-white transition-colors"
               >
-                Status
+                {copy.shell.status}
               </Link>
             </nav>
 
@@ -76,12 +85,12 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                       exit={{ opacity: 0, y: -10 }}
                       className="absolute right-0 mt-2 w-40 bg-ink-800 rounded-lg shadow-soft-lg border border-border-strong"
                     >
-                      {languages.map((lang) => (
+                      {translatedLanguages.map((lang) => (
                         <Link
                           key={lang.code}
-                          href={`/${lang.code}`}
+                          href={localePath(pathname, lang.code)}
                           className={`block px-4 py-2 text-sm transition-colors first:rounded-t-lg last:rounded-b-lg ${
-                            locale === lang.code
+                            localeCode === lang.code
                               ? "bg-panda-500/20 text-panda-400"
                               : "text-slate-300 hover:bg-ink-700 hover:text-white"
                           }`}
@@ -97,16 +106,16 @@ export function PublicShell({ children, locale }: PublicShellProps) {
 
               {/* Auth CTAs */}
               <Link
-                href={`/${locale}/auth/signin`}
+                href={`/${locale}/auth/login`}
                 className="hidden sm:inline-flex text-slate-300 hover:text-white transition-colors"
               >
-                Sign in
+                {copy.shell.signIn}
               </Link>
               <Link
                 href={`/${locale}/auth/register`}
                 className="btn-primary"
               >
-                Get Started
+                {copy.shell.getStarted}
               </Link>
 
               {/* Mobile Menu Toggle */}
@@ -139,28 +148,28 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                   className="block px-3 py-2 text-slate-300 hover:bg-ink-800 hover:text-white rounded-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  About
+                  {copy.shell.about}
                 </Link>
                 <Link
                   href={`/${locale}/faq`}
                   className="block px-3 py-2 text-slate-300 hover:bg-ink-800 hover:text-white rounded-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  FAQ
+                  {copy.shell.faq}
                 </Link>
                 <Link
                   href={`/${locale}/status`}
                   className="block px-3 py-2 text-slate-300 hover:bg-ink-800 hover:text-white rounded-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Status
+                  {copy.shell.status}
                 </Link>
                 <Link
-                  href={`/${locale}/auth/signin`}
+                  href={`/${locale}/auth/login`}
                   className="block px-3 py-2 text-slate-300 hover:bg-ink-800 hover:text-white rounded-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Sign in
+                  {copy.shell.signIn}
                 </Link>
               </nav>
             </motion.div>
@@ -184,20 +193,20 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                 <span className="text-lg font-bold text-slate-200">BandaChao</span>
               </div>
               <p className="text-slate-400 text-sm">
-                A sovereign digital marketplace for makers, buyers, and investors.
+                {copy.shell.footerDescription}
               </p>
             </div>
 
             {/* Legal */}
             <div>
-              <h4 className="text-slate-200 font-semibold mb-4">Legal</h4>
+              <h4 className="text-slate-200 font-semibold mb-4">{copy.shell.legal}</h4>
               <ul className="space-y-2">
                 <li>
                   <Link
                     href={`/${locale}/legal/privacy`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    Privacy Policy
+                    {copy.shell.privacy}
                   </Link>
                 </li>
                 <li>
@@ -205,7 +214,7 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                     href={`/${locale}/legal/terms`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    Terms of Service
+                    {copy.shell.terms}
                   </Link>
                 </li>
                 <li>
@@ -213,7 +222,7 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                     href={`/${locale}/legal/returns`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    Return & Refund Policy
+                    {copy.shell.returns}
                   </Link>
                 </li>
               </ul>
@@ -221,14 +230,14 @@ export function PublicShell({ children, locale }: PublicShellProps) {
 
             {/* Company */}
             <div>
-              <h4 className="text-slate-200 font-semibold mb-4">Company</h4>
+              <h4 className="text-slate-200 font-semibold mb-4">{copy.shell.company}</h4>
               <ul className="space-y-2">
                 <li>
                   <Link
                     href={`/${locale}/about`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    About Us
+                    {copy.shell.aboutUs}
                   </Link>
                 </li>
                 <li>
@@ -236,7 +245,7 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                     href={`/${locale}/faq`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    FAQ
+                    {copy.shell.faq}
                   </Link>
                 </li>
                 <li>
@@ -244,7 +253,7 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                     href={`/${locale}/status`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    System Status
+                    {copy.shell.systemStatus}
                   </Link>
                 </li>
               </ul>
@@ -252,14 +261,14 @@ export function PublicShell({ children, locale }: PublicShellProps) {
 
             {/* Get Started */}
             <div>
-              <h4 className="text-slate-200 font-semibold mb-4">Get Started</h4>
+              <h4 className="text-slate-200 font-semibold mb-4">{copy.shell.start}</h4>
               <ul className="space-y-2">
                 <li>
                   <Link
                     href={`/${locale}/square`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    Explore Marketplace
+                    {copy.shell.exploreMarketplace}
                   </Link>
                 </li>
                 <li>
@@ -267,7 +276,7 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                     href={`/${locale}/cockpit`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    Become a Maker
+                    {copy.shell.becomeMaker}
                   </Link>
                 </li>
                 <li>
@@ -275,7 +284,7 @@ export function PublicShell({ children, locale }: PublicShellProps) {
                     href={`/${locale}/auth/register`}
                     className="text-slate-400 hover:text-white text-sm transition-colors"
                   >
-                    Create Account
+                    {copy.shell.createAccount}
                   </Link>
                 </li>
               </ul>
@@ -285,7 +294,7 @@ export function PublicShell({ children, locale }: PublicShellProps) {
           {/* Bottom Bar */}
           <div className="border-t border-border mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-slate-400 text-sm text-center sm:text-left">
-              © {new Date().getFullYear()} BandaChao. All rights reserved.
+              © {new Date().getFullYear()} BandaChao. {copy.shell.rights}
             </p>
             <div className="flex items-center gap-4">
               <Link

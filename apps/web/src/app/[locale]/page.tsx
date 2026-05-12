@@ -17,43 +17,46 @@ import {
 import { PublicShell } from "@/components/layout/shells/PublicShell";
 import { AskPanda } from "@/components/ai/AskPanda";
 import { use } from "react";
+import { normalizeLocale, uiCopy } from "@/i18n/ui-copy";
 
 export default function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = use(params);
+  const { locale: rawLocale } = use(params);
+  const locale = normalizeLocale(rawLocale);
+  const copy = uiCopy[locale];
 
   const pillars = [
     {
-      name: "Square",
+      name: copy.landing.pillars.square.name,
       icon: ShoppingBag,
-      desc: "Discover products from verified makers worldwide",
+      desc: copy.landing.pillars.square.desc,
       href: `/${locale}/square`,
       color: "from-panda-500 to-sky-500",
     },
     {
-      name: "Cockpit",
+      name: copy.landing.pillars.cockpit.name,
       icon: Briefcase,
-      desc: "Manage your manufacturing and sales operations",
+      desc: copy.landing.pillars.cockpit.desc,
       href: `/${locale}/cockpit`,
       color: "from-panda-700 to-panda-500",
     },
     {
-      name: "Playground",
+      name: copy.landing.pillars.playground.name,
       icon: TrendingUp,
-      desc: "Invest in batches and opportunities",
+      desc: copy.landing.pillars.playground.desc,
       href: `/${locale}/playground`,
       color: "from-jade-500 to-jade-600",
     },
     {
-      name: "Social",
+      name: copy.landing.pillars.social.name,
       icon: Users,
-      desc: "Community feed, videos, and maker connections",
+      desc: copy.landing.pillars.social.desc,
       href: `/${locale}/feed`,
       color: "from-purple-500 to-pink-500",
     },
     {
-      name: "Vault",
+      name: copy.landing.pillars.vault.name,
       icon: Lock,
-      desc: "Secure wallet and financial management",
+      desc: copy.landing.pillars.vault.desc,
       href: `/${locale}/vault`,
       color: "from-panda-700 to-sky-500",
     },
@@ -62,18 +65,18 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
   const features = [
     {
       icon: Shield,
-      title: "Escrow Protection",
-      desc: "Every transaction secured by smart escrow",
+      title: copy.landing.features[0].title,
+      desc: copy.landing.features[0].desc,
     },
     {
       icon: CheckCircle,
-      title: "Verified Makers",
-      desc: "KYC-verified manufacturers you can trust",
+      title: copy.landing.features[1].title,
+      desc: copy.landing.features[1].desc,
     },
     {
       icon: Zap,
-      title: "Instant Settlement",
-      desc: "Fast payouts in your preferred currency",
+      title: copy.landing.features[2].title,
+      desc: copy.landing.features[2].desc,
     },
   ];
 
@@ -89,18 +92,18 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
               transition={{ duration: 0.6 }}
             >
               <h1 className="text-5xl md:text-7xl font-bold text-slate-200 mb-6">
-                The Sovereign
-                <span className="block text-gradient-primary">Digital Marketplace</span>
+                {copy.landing.heroPrefix}
+                <span className="block text-gradient-primary">{copy.landing.heroHighlight}</span>
               </h1>
               <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
-                Connect directly with makers, invest in production batches, and transact in a closed-loop digital ecosystem. No intermediaries. No hidden fees. Full transparency.
+                {copy.landing.heroBody}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href={`/${locale}/auth/register`} className="btn-primary text-lg">
-                  Create Account
+                  {copy.landing.createAccount}
                 </Link>
                 <Link href={`/${locale}/square`} className="btn-ghost text-lg">
-                  Explore Marketplace
+                  {copy.landing.exploreMarketplace}
                 </Link>
               </div>
             </motion.div>
@@ -112,10 +115,10 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-200 mb-4">
-                Five Pillars of BandaChao
+                {copy.landing.pillarsTitle}
               </h2>
               <p className="text-slate-300 max-w-2xl mx-auto">
-                A complete digital nation with distinct roles and functions
+                {copy.landing.pillarsSubtitle}
               </p>
             </div>
 
@@ -141,7 +144,7 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
                         </h3>
                         <p className="text-slate-300 text-sm mb-4">{pillar.desc}</p>
                         <span className="text-panda-400 text-sm font-medium flex items-center gap-2">
-                          Enter <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          {copy.landing.enter} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </span>
                       </div>
                     </Link>
@@ -157,29 +160,13 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-200 mb-4">
-                How It Works
+                {copy.landing.howTitle}
               </h2>
-              <p className="text-slate-300">Simple. Secure. Sovereign.</p>
+              <p className="text-slate-300">{copy.landing.howSubtitle}</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  step: "1",
-                  title: "Sign Up",
-                  desc: "Create your account in 60 seconds. Choose your role: Buyer, Maker, or Investor.",
-                },
-                {
-                  step: "2",
-                  title: "Explore",
-                  desc: "Browse verified products, respond to RFQs, or invest in production batches.",
-                },
-                {
-                  step: "3",
-                  title: "Transact",
-                  desc: "Buy, sell, or invest with escrow protection. Fast settlements in your currency.",
-                },
-              ].map((item, i) => (
+              {copy.landing.steps.map((item, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -189,7 +176,7 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
                   className="glass-card p-6 text-center"
                 >
                   <div className="w-16 h-16 bg-gradient-to-br from-panda-500 to-panda-600 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
-                    {item.step}
+                    {i + 1}
                   </div>
                   <h3 className="text-xl font-bold text-slate-200 mb-2">
                     {item.title}
@@ -206,10 +193,10 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-200 mb-4">
-                Built on Trust
+                {copy.landing.trustTitle}
               </h2>
               <p className="text-slate-300">
-                Security, compliance, and transparency at every step
+                {copy.landing.trustSubtitle}
               </p>
             </div>
 
@@ -244,10 +231,10 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
           <div className="max-w-4xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               {[
-                { value: "2,500+", label: "Active Makers" },
-                { value: "12,000+", label: "Products Listed" },
-                { value: "$4.2M", label: "Monthly Volume" },
-                { value: "15K+", label: "Happy Buyers" },
+                { value: "2,500+", label: copy.landing.stats[0] },
+                { value: "12,000+", label: copy.landing.stats[1] },
+                { value: "$4.2M", label: copy.landing.stats[2] },
+                { value: "15K+", label: copy.landing.stats[3] },
               ].map((stat, i) => (
                 <motion.div
                   key={i}
@@ -276,13 +263,13 @@ export default function LandingPage({ params }: { params: Promise<{ locale: stri
             >
               <Sparkles className="h-12 w-12 text-silk-500 mx-auto mb-6" />
               <h2 className="text-3xl md:text-4xl font-bold text-slate-200 mb-4">
-                Start in 60 Seconds
+                {copy.landing.ctaTitle}
               </h2>
               <p className="text-slate-300 mb-8 max-w-2xl mx-auto">
-                Join thousands of makers and buyers in the sovereign digital marketplace
+                {copy.landing.ctaBody}
               </p>
               <Link href={`/${locale}/auth/register`} className="btn-primary text-lg">
-                Create Your Account
+                {copy.landing.ctaButton}
               </Link>
             </motion.div>
           </div>

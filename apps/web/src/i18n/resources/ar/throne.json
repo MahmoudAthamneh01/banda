@@ -1,6 +1,6 @@
 {
   "title": "العرش",
-  "users": "المستخدمين",
+  "users": "المستخدمون",
   "factories": "المصانع",
   "reports": "التقارير",
   "compliance": "الامتثال",
@@ -8,9 +8,9 @@
   "system_health": "صحة النظام",
   "total_users": "إجمالي المستخدمين",
   "total_factories": "إجمالي المصانع",
-  "platform_revenue": "إيرادات المنصة",
-  "pending_disputes": "النزاعات المعلقة",
-  "ban_user": "حظر المستخدم",
-  "verify_factory": "التحقق من المصنع",
-  "resolve_dispute": "حل النزاع"
+  "platform_revenue": "إيراد المنصة",
+  "pending_disputes": "نزاعات معلقة",
+  "ban_user": "حظر مستخدم",
+  "verify_factory": "توثيق مصنع",
+  "resolve_dispute": "حل نزاع"
 }

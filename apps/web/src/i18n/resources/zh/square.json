@@ -4,8 +4,8 @@
   "categories": "分类",
   "top_factories": "热门工厂",
   "new_arrivals": "新品上架",
-  "best_sellers": "畅销商品",
-  "deals": "优惠活动",
+  "best_sellers": "畅销产品",
+  "deals": "优惠",
   "add_to_cart": "加入购物车",
   "buy_now": "立即购买",
   "view_details": "查看详情",
@@ -19,5 +19,5 @@
   "products": "产品",
   "reviews": "评价",
   "rating": "评分",
-  "trust_score": "信任分数"
+  "trust_score": "信任评分"
 }
