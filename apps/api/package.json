@@ -5,7 +5,7 @@
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "dev": "tsx watch src/server.ts",
-        "start": "node dist/server.js",
+        "start": "prisma generate --schema prisma/schema.prisma && node dist/server.js",
         "lint": "tsc --noEmit",
         "typecheck": "tsc --noEmit",
         "test": "node -e \"console.log('No API tests yet')\"",
