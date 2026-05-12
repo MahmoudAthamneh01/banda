@@ -1,13 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { AuthLayout } from '@/components/layout/AuthLayout';
 import { Button } from '@bandachao/ui';
 import { Loader2, Mail, Phone, HelpCircle } from 'lucide-react';
+import { authFlowCopy, normalizeLocale } from '@/i18n/ui-copy';
 
 export default function VerifyPage() {
+  const params = useParams();
   const router = useRouter();
+  const locale = normalizeLocale(typeof params.locale === 'string' ? params.locale : 'en');
+  const copy = authFlowCopy[locale];
   const [method, setMethod] = useState<'email' | 'phone'>('email');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
@@ -23,12 +27,11 @@ export default function VerifyPage() {
 
   const handleOtpChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
-    
+
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
 
-    // Auto-focus next input
     if (value && index < 5) {
       const nextInput = document.getElementById(`otp-${index + 1}`);
       nextInput?.focus();
@@ -48,37 +51,37 @@ export default function VerifyPage() {
     if (code.length !== 6) return;
 
     setLoading(true);
-    
-    // Simulate API call
+
+    // Simulate API call until the backend exposes OTP verification endpoints.
     setTimeout(() => {
       setLoading(false);
-      // TODO: Redirect to onboarding
-      router.push('/en/onboarding');
+      router.push(`/${locale}/onboarding`);
     }, 1500);
   };
 
   const handleResend = () => {
     setResendTimer(60);
-    // TODO: Call resend API
   };
 
   return (
     <AuthLayout>
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-        {/* Title */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-200 mb-2">Verify Your Account</h1>
+          <h1 className="text-3xl font-bold text-slate-200 mb-2">{copy.verify.title}</h1>
           <p className="text-slate-400">
-            We sent a 6-digit code to your {method === 'email' ? 'email' : 'phone'}
+            {copy.verify.subtitle} {method === 'email' ? copy.methods.email : copy.methods.phone}
           </p>
           <p className="text-sm text-slate-500 mt-1">
-            Check <span className="font-medium text-slate-300">{method === 'email' ? 'your inbox' : 'your messages'}</span>
+            {copy.verify.check}{' '}
+            <span className="font-medium text-slate-300">
+              {method === 'email' ? copy.verify.inbox : copy.verify.messages}
+            </span>
           </p>
         </div>
 
-        {/* Method Switch */}
         <div className="flex justify-center gap-4 mb-8">
           <button
+            type="button"
             onClick={() => setMethod('email')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
               method === 'email'
@@ -87,9 +90,10 @@ export default function VerifyPage() {
             }`}
           >
             <Mail className="h-4 w-4" />
-            Email
+            {copy.methods.email}
           </button>
           <button
+            type="button"
             onClick={() => setMethod('phone')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
               method === 'phone'
@@ -98,11 +102,10 @@ export default function VerifyPage() {
             }`}
           >
             <Phone className="h-4 w-4" />
-            Phone
+            {copy.methods.phone}
           </button>
         </div>
 
-        {/* OTP Input */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex justify-center gap-2">
             {otp.map((digit, index) => (
@@ -128,47 +131,46 @@ export default function VerifyPage() {
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Verifying...
+                {copy.verify.verifying}
               </>
             ) : (
-              'Verify & Continue'
+              copy.verify.submit
             )}
           </Button>
         </form>
 
-        {/* Resend */}
         <div className="mt-6 text-center">
           {resendTimer > 0 ? (
             <p className="text-sm text-slate-400">
-              Resend code in <span className="font-medium text-slate-300">{resendTimer}s</span>
+              {copy.verify.resendIn} <span className="font-medium text-slate-300">{resendTimer}s</span>
             </p>
           ) : (
             <button
+              type="button"
               onClick={handleResend}
               className="text-sm text-panda-400 hover:text-panda-300 font-medium"
             >
-              Resend code
+              {copy.verify.resend}
             </button>
           )}
         </div>
 
-        {/* AI Helper */}
         <button
+          type="button"
           onClick={() => setShowHelp(!showHelp)}
           className="mt-6 mx-auto flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm text-slate-400 hover:text-slate-200 transition-colors"
         >
           <HelpCircle className="h-4 w-4" />
-          Code not arriving?
+          {copy.verify.helpButton}
         </button>
 
         {showHelp && (
           <div className="mt-4 p-4 bg-panda-500/10 border border-panda-500/20 rounded-lg">
-            <p className="text-sm text-slate-300 mb-2">🐼 Troubleshooting:</p>
+            <p className="text-sm text-slate-300 mb-2">{copy.verify.helpTitle}</p>
             <ul className="text-sm text-slate-400 space-y-1">
-              <li>• Check your spam/junk folder</li>
-              <li>• Verify the {method} address is correct</li>
-              <li>• Try the other verification method</li>
-              <li>• Wait 60s before requesting a new code</li>
+              {copy.verify.helpSteps.map((step) => (
+                <li key={step}>- {step}</li>
+              ))}
             </ul>
           </div>
         )}

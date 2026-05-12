@@ -2,11 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { AuthLayout } from '@/components/layout/AuthLayout';
 import { Button } from '@bandachao/ui';
 import { Mail, Phone, Loader2, CheckCircle } from 'lucide-react';
+import { authFlowCopy, normalizeLocale } from '@/i18n/ui-copy';
 
 export default function ForgotPasswordPage() {
+  const params = useParams();
+  const locale = normalizeLocale(typeof params.locale === 'string' ? params.locale : 'en');
+  const copy = authFlowCopy[locale];
   const [method, setMethod] = useState<'email' | 'phone'>('email');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -15,8 +20,8 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
-    // Simulate API call
+
+    // Simulate API call until the backend exposes password reset endpoints.
     setTimeout(() => {
       setLoading(false);
       setSent(true);
@@ -30,15 +35,15 @@ export default function ForgotPasswordPage() {
           <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-success-500/20 flex items-center justify-center">
             <CheckCircle className="h-8 w-8 text-success-500" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-200 mb-2">Check Your {method === 'email' ? 'Email' : 'Phone'}</h1>
+          <h1 className="text-2xl font-bold text-slate-200 mb-2">
+            {copy.forgot.sentTitle} {method === 'email' ? copy.forgot.emailTarget : copy.forgot.phoneTarget}
+          </h1>
           <p className="text-slate-400 mb-6">
-            We've sent a password reset link to <span className="font-medium text-slate-300">{identifier}</span>
+            {copy.forgot.sentBody} <span className="font-medium text-slate-300">{identifier}</span>
           </p>
-          <p className="text-sm text-slate-500 mb-8">
-            Didn't receive it? Check your spam folder or try again in 60 seconds.
-          </p>
-          <Link href="/en/auth/signin">
-            <Button className="w-full">Back to Sign In</Button>
+          <p className="text-sm text-slate-500 mb-8">{copy.forgot.sentHint}</p>
+          <Link href={`/${locale}/auth/login`}>
+            <Button className="w-full">{copy.forgot.backToSignIn}</Button>
           </Link>
         </div>
       </AuthLayout>
@@ -48,15 +53,14 @@ export default function ForgotPasswordPage() {
   return (
     <AuthLayout>
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-        {/* Title */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-200 mb-2">Reset Password</h1>
-          <p className="text-slate-400">We'll send you a reset link</p>
+          <h1 className="text-3xl font-bold text-slate-200 mb-2">{copy.forgot.title}</h1>
+          <p className="text-slate-400">{copy.forgot.subtitle}</p>
         </div>
 
-        {/* Method Tabs */}
         <div className="flex gap-2 mb-6 bg-white/5 p-1 rounded-lg">
           <button
+            type="button"
             onClick={() => setMethod('email')}
             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
               method === 'email'
@@ -65,9 +69,10 @@ export default function ForgotPasswordPage() {
             }`}
           >
             <Mail className="h-4 w-4 inline mr-2" />
-            Email
+            {copy.methods.email}
           </button>
           <button
+            type="button"
             onClick={() => setMethod('phone')}
             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
               method === 'phone'
@@ -76,15 +81,14 @@ export default function ForgotPasswordPage() {
             }`}
           >
             <Phone className="h-4 w-4 inline mr-2" />
-            Phone
+            {copy.methods.phone}
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
-              {method === 'email' ? 'Email Address' : 'Phone Number'}
+              {method === 'email' ? copy.forgot.emailAddress : copy.forgot.phoneNumber}
             </label>
             <input
               type={method === 'email' ? 'email' : 'tel'}
@@ -104,31 +108,29 @@ export default function ForgotPasswordPage() {
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Sending...
+                {copy.forgot.sending}
               </>
             ) : (
-              'Send Reset Link'
+              copy.forgot.send
             )}
           </Button>
         </form>
 
-        {/* Info Box */}
         <div className="mt-6 p-4 bg-sky-500/10 border border-sky-500/20 rounded-lg">
           <p className="text-sm text-slate-300">
-            <strong>What happens next?</strong>
+            <strong>{copy.forgot.nextTitle}</strong>
           </p>
           <ul className="mt-2 text-sm text-slate-400 space-y-1">
-            <li>• You'll receive a reset link (valid for 1 hour)</li>
-            <li>• Click the link to create a new password</li>
-            <li>• Sign in with your new password</li>
+            {copy.forgot.nextSteps.map((step) => (
+              <li key={step}>- {step}</li>
+            ))}
           </ul>
         </div>
 
-        {/* Back Link */}
         <div className="mt-6 text-center text-sm text-slate-400">
-          Remember your password?{' '}
-          <Link href="/en/auth/signin" className="text-panda-400 hover:text-panda-300 font-medium">
-            Sign in
+          {copy.forgot.remember}{' '}
+          <Link href={`/${locale}/auth/login`} className="text-panda-400 hover:text-panda-300 font-medium">
+            {copy.forgot.signIn}
           </Link>
         </div>
       </div>
